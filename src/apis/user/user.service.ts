@@ -10,7 +10,11 @@ export class UserService {
     private readonly userrepository: Repository<User>,
   ) {}
 
-  async create(input) {
+  async create({ input }) {
     return await this.userrepository.save(input);
+  }
+
+  async delete({ id }) {
+    return await this.userrepository.softDelete({ id });
   }
 }
