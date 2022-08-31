@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './apis/user/user.module';
-import { ApisnoticeBoardController } from './apisnotice_board/apisnotice_board.controller';
 import { NoticeBoardModule } from './apis/notice_board/notice_board.module';
 
 @Module({
@@ -26,7 +25,7 @@ import { NoticeBoardModule } from './apis/notice_board/notice_board.module';
 
     NoticeBoardModule,
   ],
-  controllers: [AppController, ApisnoticeBoardController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

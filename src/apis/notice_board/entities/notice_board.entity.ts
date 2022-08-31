@@ -12,7 +12,7 @@ export class Notice_Board {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({nullable: true})
   user_id: string;
 
   @Column()
