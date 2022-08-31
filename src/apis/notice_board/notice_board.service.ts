@@ -50,4 +50,16 @@ export class NoticeBoardService {
       return error;
     }
   }
+
+  async deleteNotice(id: string) {
+    try {
+      await this.findNoticeById(id);
+
+      await this.noticeBoardRepository.delete(id);
+
+      return { message: 'Delete Notice' };
+    } catch (error) {
+      return error;
+    }
+  }
 }

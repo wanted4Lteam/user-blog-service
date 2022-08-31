@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { NoticeInputDto } from './dto/notice_board.input';
 import { NoticeBoardService } from './notice_board.service';
 
@@ -19,5 +19,10 @@ export class NoticeBoardController {
   @Put(':id')
   update(@Param('id') id: string, @Body() body: NoticeInputDto) {
     return this.noticeBoardService.updateNotice(id, body);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.noticeBoardService.deleteNotice(id);
   }
 }
