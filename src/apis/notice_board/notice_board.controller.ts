@@ -25,4 +25,9 @@ export class NoticeBoardController {
   delete(@Param('id') id: string) {
     return this.noticeBoardService.deleteNotice(id);
   }
+
+  @Get(':id')
+  detail(@Param('id') id: string) {
+    return this.noticeBoardService.detailNotice(id);
+  }
 }

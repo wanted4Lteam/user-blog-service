@@ -62,4 +62,14 @@ export class NoticeBoardService {
       return error;
     }
   }
+
+  async detailNotice(id: string) {
+    try {
+      const notice = await this.findNoticeById(id);
+
+      return notice;
+    } catch(error) {
+      return error;
+    }
+  }
 }
