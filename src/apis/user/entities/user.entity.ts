@@ -39,7 +39,7 @@ export class User {
   @Column()
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastconnect_date: Date;
 
   @CreateDateColumn()
