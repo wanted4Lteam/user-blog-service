@@ -3,9 +3,13 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UserModule } from './apis/user/user.module';
 
 @Module({
   imports: [
+    UserModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.HOST,
@@ -17,7 +21,6 @@ import { AppService } from './app.service';
       synchronize: true,
       logging: true,
     }),
-    ConfigModule.forRoot({ isGlobal: true }), //
   ],
   controllers: [AppController],
   providers: [AppService],
