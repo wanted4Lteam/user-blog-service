@@ -1,20 +1,23 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { NoticeSaveDto } from './dto/notice_board.save';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { NoticeInputDto } from './dto/notice_board.input';
 import { NoticeBoardService } from './notice_board.service';
 
 @Controller('noticeboards')
 export class NoticeBoardController {
-    constructor(private readonly noticeBoardService: NoticeBoardService) {}
+  constructor(private readonly noticeBoardService: NoticeBoardService) {}
 
-    @Get()
-    getAll() {
-        return this.noticeBoardService.getAll();
-    }
+  @Get()
+  getAll() {
+    return this.noticeBoardService.getAllNotice();
+  }
 
-    @Post()
-    save(@Body() body: NoticeSaveDto) {
-        return this.noticeBoardService.save(body);
-    }
-    
+  @Post()
+  save(@Body() body: NoticeInputDto) {
+    return this.noticeBoardService.saveNotice(body);
+  }
 
+  @Put(':id')
+  update(@Param('id') id: string, @Body() body: NoticeInputDto) {
+    return this.noticeBoardService.updateNotice(id, body);
+  }
 }

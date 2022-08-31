@@ -1,4 +1,4 @@
-export class NoticeSaveDto {
+export class NoticeInputDto {
     title: string;
 
     content: string;
