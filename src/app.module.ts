@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './apis/user/user.module';
 import { AuthModule } from './apis/auth/auth.module';
+import { NoticeBoardModule } from './apis/notice_board/notice_board.module';
 
 @Module({
   imports: [
@@ -22,6 +23,8 @@ import { AuthModule } from './apis/auth/auth.module';
       synchronize: true,
       logging: true,
     }),
+
+    NoticeBoardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
