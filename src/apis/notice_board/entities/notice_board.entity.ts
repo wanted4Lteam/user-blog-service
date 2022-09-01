@@ -12,7 +12,7 @@ export class Notice_Board {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   user_id: string;
 
   @Column()
@@ -22,7 +22,7 @@ export class Notice_Board {
   content: string;
 
   @CreateDateColumn()
-  createdDate: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
   updateAt: Date;
