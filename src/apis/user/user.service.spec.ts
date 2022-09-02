@@ -8,24 +8,8 @@ describe('UserService', () => {
   let userService: UserService;
 
   const mockUserRepository = {
-    save: jest.fn().mockImplementation((user: UserInput) =>
-      Promise.resolve({
-        id: '1',
-        grade: Grade.SILVER,
-        lastconnect_date: null,
-        createDate: 20220902,
-        updateDate: 20220902,
-        deleteAt: null,
-        ...user,
-      }),
-    ),
-    softDelete: jest.fn().mockImplementation((id) =>
-      Promise.resolve({
-        generatedMaps: [],
-        raw: [],
-        affected: 1,
-      }),
-    ),
+    save: jest.fn(),
+    softDelete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -48,6 +32,20 @@ describe('UserService', () => {
 
   describe('createUser', () => {
     it('회원가입을 진행 후 user 반환.', async () => {
+      //given
+      mockUserRepository.save.mockImplementation((user) =>
+        Promise.resolve({
+          id: '1',
+          grade: Grade.SILVER,
+          lastconnect_date: null,
+          createDate: 20220902,
+          updateDate: 20220902,
+          deleteAt: null,
+          ...user,
+        }),
+      );
+
+      //when
       const createUser: UserInput = {
         email: 'abcd@gmail.com',
         name: '사용자',
@@ -58,6 +56,8 @@ describe('UserService', () => {
       };
 
       const result = await userService.create({ input: createUser });
+
+      //then
 
       expect(result).toEqual({
         id: '1',
@@ -73,9 +73,21 @@ describe('UserService', () => {
 
   describe('deleteUser', () => {
     it('회원탈퇴', async () => {
+      //given
+      mockUserRepository.softDelete.mockImplementation((id) =>
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 1,
+        }),
+      );
+
+      //when
       const id: String = '1';
 
       const result = await userService.delete({ id });
+
+      //then
 
       expect(result).toEqual({
         generatedMaps: [],
