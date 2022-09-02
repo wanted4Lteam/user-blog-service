@@ -1,16 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserInput } from 'src/apis/user/dto/user.input';
-import { User } from './entities/user.entity';
+import { Grade, User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
   let userService: UserService;
 
   const mockUserRepository = {
-    save: jest.fn().mockImplementation((user) =>
+    save: jest.fn().mockImplementation((user: UserInput) =>
       Promise.resolve({
-        id: Date.now(),
+        id: '1',
+        grade: Grade.SILVER,
+        lastconnect_date: null,
+        createDate: 20220902,
+        updateDate: 20220902,
+        deleteAt: null,
         ...user,
       }),
     ),
@@ -42,8 +47,8 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    it('회원가입을 진행 후 user pk 반환.', async () => {
-      const createUser: any = {
+    it('회원가입을 진행 후 user 반환.', async () => {
+      const createUser: UserInput = {
         email: 'abcd@gmail.com',
         name: '사용자',
         gender: '남성',
@@ -52,10 +57,16 @@ describe('UserService', () => {
         phone: '010-1234-5678',
       };
 
-      const result = await userService.create(createUser);
+      const result = await userService.create({ input: createUser });
 
       expect(result).toEqual({
-        id: expect.any(Number),
+        id: '1',
+        grade: Grade.SILVER,
+        lastconnect_date: null,
+        createDate: 20220902,
+        updateDate: 20220902,
+        deleteAt: null,
+        ...createUser,
       });
     });
   });
