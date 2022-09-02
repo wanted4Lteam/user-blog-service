@@ -25,6 +25,9 @@ describe('UserService', () => {
     }).compile();
 
     userService = module.get<UserService>(UserService);
+    mockUserRepository.save.mockClear();
+    mockUserRepository.findOneBy.mockClear();
+    mockUserRepository.softDelete.mockClear();
   });
 
   it('should be defined', () => {
@@ -149,6 +152,20 @@ describe('UserService', () => {
 
       //then
       expect(result).toEqual(findUser);
+      expect(mockUserRepository.findOneBy).toHaveBeenCalledTimes(1);
+      expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({ email });
+    });
+    it('존재하지 않는 이메일로 회원조회 실패', async () => {
+      //given
+      mockUserRepository.findOneBy.mockResolvedValue(null);
+
+      //when
+      const email = '1234@gmail.com';
+
+      const result = await userService.findOne(email);
+
+      //then
+      expect(result).toBeNull();
       expect(mockUserRepository.findOneBy).toHaveBeenCalledTimes(1);
       expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({ email });
     });
