@@ -58,7 +58,6 @@ describe('UserService', () => {
       const result = await userService.create({ input: createUser });
 
       //then
-
       expect(result).toEqual({
         id: '1',
         grade: Grade.SILVER,
@@ -88,7 +87,6 @@ describe('UserService', () => {
       const result = await userService.delete({ id });
 
       //then
-
       expect(result).toEqual({
         generatedMaps: [],
         raw: [],
@@ -104,6 +102,7 @@ describe('UserService', () => {
           affected: 0,
         }),
       );
+
       //when
       const id: string = '';
 
