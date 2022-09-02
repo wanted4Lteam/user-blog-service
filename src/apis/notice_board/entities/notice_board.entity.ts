@@ -1,3 +1,4 @@
+import { User } from 'src/apis/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -5,6 +6,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -12,7 +15,7 @@ export class Notice_Board {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   user_id: string;
 
   @Column()
@@ -22,11 +25,15 @@ export class Notice_Board {
   content: string;
 
   @CreateDateColumn()
-  createdDate: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
   updateAt: Date;
 
   @DeleteDateColumn()
   deleteAt: Date;
+
+  @ManyToOne(() => User, (user) => user.noticeBoard)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  user: User;
 }

@@ -31,7 +31,7 @@ export class AuthService {
    * @param user 로그인 요청 사용자
    */
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, sub: user.id, grade: user.grade };
     return {
       access_token: this.jwtService.sign(payload),
     };
