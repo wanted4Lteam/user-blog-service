@@ -1,4 +1,5 @@
 import { Notice_Board } from 'src/apis/notice_board/entities/notice_board.entity';
+import { Operation_Board } from 'src/apis/operation_board/entities/operation_board.entity';
 import {
   Column,
   CreateDateColumn,
@@ -55,4 +56,7 @@ export class User {
 
   @OneToMany(() => Notice_Board, (noticeBoard) => noticeBoard.user)
   noticeBoard: Notice_Board[];
+
+  @OneToMany(() => Operation_Board, (operationBoard) => operationBoard.user)
+  operationBoard: Operation_Board[];
 }

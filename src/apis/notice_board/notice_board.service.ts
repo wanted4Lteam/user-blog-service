@@ -81,7 +81,7 @@ export class NoticeBoardService {
 
       if(notice.user_id !== user_id) {
         return Object.assign({
-          statusCode: 400,
+          statusCode: 401,
           message: '수정 권한이 없습니다.'
         })
       }
@@ -106,7 +106,7 @@ export class NoticeBoardService {
 
       if(notice.user_id !== user_id) {
         return Object.assign({
-          statusCode: 400,
+          statusCode: 401,
           message: '삭제 권한이 없습니다.'
         })
       }
