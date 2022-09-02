@@ -75,9 +75,16 @@ export class NoticeBoardService {
     }
   }
 
-  async updateNotice(id: string, noticeInputDto: NoticeInputDto) {
+  async updateNotice(id: string, noticeInputDto: NoticeInputDto, user_id: string) {
     try {
-      await this.findNoticeById(id);
+      const notice = await this.findNoticeById(id);
+
+      if(notice.user_id !== user_id) {
+        return Object.assign({
+          statusCode: 400,
+          message: '수정 권한이 없습니다.'
+        })
+      }
 
       await this.noticeBoardRepository.update(id, noticeInputDto);
 
@@ -93,9 +100,16 @@ export class NoticeBoardService {
     }
   }
 
-  async deleteNotice(id: string) {
+  async deleteNotice(id: string, user_id: string) {
     try {
-      await this.findNoticeById(id);
+      const notice = await this.findNoticeById(id);
+
+      if(notice.user_id !== user_id) {
+        return Object.assign({
+          statusCode: 400,
+          message: '삭제 권한이 없습니다.'
+        })
+      }
 
       await this.noticeBoardRepository.softDelete(id);
 

@@ -1,3 +1,4 @@
+import { User } from 'src/apis/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -5,6 +6,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -29,4 +32,8 @@ export class Notice_Board {
 
   @DeleteDateColumn()
   deleteAt: Date;
+
+  @ManyToOne(() => User, (user) => user.noticeBoard)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  user: User;
 }
