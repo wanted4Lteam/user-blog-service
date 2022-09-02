@@ -95,5 +95,26 @@ describe('UserService', () => {
         affected: 1,
       });
     });
+    it('id가 blank인 경우 회원탈퇴', async () => {
+      //given
+      mockUserRepository.softDelete.mockImplementation((id) =>
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 0,
+        }),
+      );
+      //when
+      const id: string = '';
+
+      const result = await userService.delete({ id });
+
+      //then
+      expect(result).toEqual({
+        generatedMaps: [],
+        raw: [],
+        affected: 0,
+      });
+    });
   });
 });
