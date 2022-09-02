@@ -145,12 +145,12 @@ describe('UserService', () => {
       //when
       const email: string = 'abcd@gmail.com';
 
-      const result = await mockUserRepository.findOneBy(email);
+      const result = await userService.findOne(email);
 
       //then
       expect(result).toEqual(findUser);
       expect(mockUserRepository.findOneBy).toHaveBeenCalledTimes(1);
-      expect(mockUserRepository.findOneBy).toHaveBeenCalledWith(email);
+      expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({ email });
     });
   });
 });
