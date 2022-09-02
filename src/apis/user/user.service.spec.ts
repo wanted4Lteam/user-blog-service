@@ -14,6 +14,13 @@ describe('UserService', () => {
         ...user,
       }),
     ),
+    softDelete: jest.fn().mockImplementation((id) =>
+      Promise.resolve({
+        generatedMaps: [],
+        raw: [],
+        affected: 1,
+      }),
+    ),
   };
 
   beforeEach(async () => {
@@ -49,6 +56,20 @@ describe('UserService', () => {
 
       expect(result).toEqual({
         id: expect.any(Number),
+      });
+    });
+  });
+
+  describe('deleteUser', () => {
+    it('회원탈퇴', async () => {
+      const id: String = '1';
+
+      const result = await userService.delete({ id });
+
+      expect(result).toEqual({
+        generatedMaps: [],
+        raw: [],
+        affected: 1,
       });
     });
   });
