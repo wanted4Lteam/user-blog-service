@@ -10,6 +10,7 @@ describe('UserService', () => {
   const mockUserRepository = {
     save: jest.fn(),
     softDelete: jest.fn(),
+    findOneBy: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -114,6 +115,42 @@ describe('UserService', () => {
         raw: [],
         affected: 0,
       });
+    });
+  });
+
+  describe('findOneByEmail', () => {
+    it('이메일로 회원조회 성공', async () => {
+      //given
+      const findUser = {
+        id: '1',
+        grade: Grade.SILVER,
+        lastconnect_date: null,
+        createDate: 20220902,
+        updateDate: 20220902,
+        deleteAt: null,
+        email: 'abcd@gmail.com',
+        name: '사용자',
+        gender: '남성',
+        age: 20,
+        password: '1234',
+        phone: '010-1234-5678',
+      };
+
+      mockUserRepository.findOneBy.mockImplementation((email: string) =>
+        Promise.resolve({
+          ...findUser,
+        }),
+      );
+
+      //when
+      const email: string = 'abcd@gmail.com';
+
+      const result = await mockUserRepository.findOneBy(email);
+
+      //then
+      expect(result).toEqual(findUser);
+      expect(mockUserRepository.findOneBy).toHaveBeenCalledTimes(1);
+      expect(mockUserRepository.findOneBy).toHaveBeenCalledWith(email);
     });
   });
 });
