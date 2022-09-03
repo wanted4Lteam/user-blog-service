@@ -125,4 +125,27 @@ export class OperationBoardService {
       throw NotFoundException;
     }
   }
+
+  async detailOperation(id: string) {
+    try {
+      const operation = await this.findOperationById(id);
+
+      if (!operation) {
+        throw new NotFoundException(
+          Object.assign({
+            statusCode: 404,
+            message: 'Not Found Operation_Board ID',
+          }),
+        );
+      }
+
+      return Object.assign({
+        data: operation,
+        statusCode: 200,
+        message: '운영게시판 게시글 조회가 완료되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
 }

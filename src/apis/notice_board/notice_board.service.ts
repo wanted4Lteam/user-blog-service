@@ -142,7 +142,7 @@ export class NoticeBoardService {
       return Object.assign({
         data: notice,
         statusCode: 200,
-        message: '공지사항이 목록 조회가 완료되었습니다.',
+        message: '공지사항이 게시글 조회가 완료되었습니다.',
       });
     } catch (NotFoundException) {
       throw NotFoundException;

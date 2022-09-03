@@ -7,6 +7,6 @@ import { NoticeBoardService } from './notice_board.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Notice_Board])],
   controllers: [NoticeBoardController],
-  providers: [NoticeBoardService]
+  providers: [NoticeBoardService],
 })
 export class NoticeBoardModule {}

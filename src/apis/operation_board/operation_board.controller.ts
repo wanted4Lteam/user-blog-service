@@ -75,4 +75,14 @@ export class OperationBoardController {
     const user_id = req.user.userId;
     return this.operationBoardService.deleteOperation(id, user_id);
   }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: '운영게시판 Detail API',
+    description: '운영게시판 게시글을 조회합니다.',
+  })
+  @Rules('admin', 'gold')
+  detail(@Param('id') id: string) {
+    return this.operationBoardService.detailOperation(id);
+  }
 }

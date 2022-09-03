@@ -7,6 +7,6 @@ import { Operation_Board } from './entities/operation_board.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Operation_Board])],
   providers: [OperationBoardService],
-  controllers: [OperationBoardController]
+  controllers: [OperationBoardController],
 })
 export class OperationBoardModule {}
