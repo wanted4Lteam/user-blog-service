@@ -31,6 +31,8 @@ describe('AuthService', () => {
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
+    mockJwtService.sign.mockClear();
+    mockUserService.findOne.mockClear();
   });
 
   it('should be defined', () => {
@@ -99,6 +101,20 @@ describe('AuthService', () => {
       });
       expect(mockUserService.findOne).toHaveBeenCalledTimes(1);
       expect(mockUserService.findOne).toHaveBeenCalledWith('abcd@gmail.com');
+    });
+    it('사용자 조회 실패', async () => {
+      //given
+      mockUserService.findOne.mockImplementation((email) =>
+        Promise.resolve(null),
+      );
+
+      //when
+      const result = await authService.validateUser('qwer@gmail.com', '1234');
+
+      //then
+      expect(result).toEqual(null);
+      expect(mockUserService.findOne).toHaveBeenCalledTimes(1);
+      expect(mockUserService.findOne).toHaveBeenCalledWith('qwer@gmail.com');
     });
   });
 });
