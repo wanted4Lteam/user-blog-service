@@ -103,4 +103,26 @@ export class GeneralBoardService {
       throw NotFoundException;
     }
   }
+
+  async deleteGeneral(id: string, user_id: string) {
+    try {
+      const general = await this.findGeneralById(id);
+
+      if (general.user_id !== user_id) {
+        return Object.assign({
+          statusCode: 401,
+          message: '삭제 권한이 없습니다.',
+        });
+      }
+
+      await this.generalBoardRepository.softDelete(id);
+
+      return Object.assign({
+        statusCode: 200,
+        message: '게시글이 삭제되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
 }

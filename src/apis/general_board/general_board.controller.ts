@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Rules } from '../auth/roles.decorator';
@@ -48,5 +48,16 @@ export class GeneralBoardController {
   ) {
     const user_id = req.user.userId;
     return this.generalBoardService.updateGeneral(id, generalInputDto, user_id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    summary: '자유게시판 Delete API',
+    description: '자유게시판에 게시글을 삭제합니다.',
+  })
+  @Rules('admin', 'gold', 'silver')
+  delete(@Param('id') id: string, @Req() req) {
+    const user_id = req.user.userId;
+    return this.generalBoardService.deleteGeneral(id, user_id);
   }
 }
