@@ -74,4 +74,33 @@ export class OperationBoardService {
       throw NotFoundException;
     }
   }
+
+  async updateOperation(
+    id: string,
+    operationInputDto: OperationInputDto,
+    user_id: string,
+  ) {
+    try {
+      const operation = await this.findOperationById(id);
+
+      if (operation.user_id !== user_id) {
+        return Object.assign({
+          statusCode: 401,
+          message: '수정 권한이 없습니다.',
+        });
+      }
+
+      await this.operationRepository.update(id, operationInputDto);
+
+      const result = await this.findOperationById(id);
+
+      return Object.assign({
+        data: result,
+        statusCode: 200,
+        message: '운영게시판이 수정되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
 }

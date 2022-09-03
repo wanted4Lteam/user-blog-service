@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Rules } from '../auth/roles.decorator';
@@ -34,5 +34,16 @@ export class OperationBoardController {
   @Rules('admin', 'gold')
   getAll() {
     return this.operationBoardService.getAllOperation();
+  }
+
+  @Put(':id')
+  @ApiOperation({
+    summary: '운영게시판 Update API',
+    description: '운영게시판 수정합니다.',
+  })
+  @Rules('admin', 'gold')
+  update(@Param('id') id: string, @Body() operationInputDto: OperationInputDto, @Req() req) {
+    const user_id = req.user.userId;
+    return this.operationBoardService.updateOperation(id, operationInputDto, user_id);
   }
 }
