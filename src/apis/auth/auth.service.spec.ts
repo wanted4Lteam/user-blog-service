@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
+import { Grade } from '../user/entities/user.entity';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -56,6 +57,48 @@ describe('AuthService', () => {
         sub: loginUser.id,
         email: loginUser.email,
       });
+    });
+  });
+
+  describe('validateUser', () => {
+    it('사용자 확인 성공', async () => {
+      //given
+      mockUserService.findOne.mockImplementation((email) =>
+        Promise.resolve({
+          id: '1',
+          grade: Grade.SILVER,
+          lastconnect_date: null,
+          createDate: 20220902,
+          updateDate: 20220902,
+          deleteAt: null,
+          email: 'abcd@gmail.com',
+          name: '사용자',
+          gender: '남성',
+          age: 20,
+          password: '1234',
+          phone: '010-1234-5678',
+        }),
+      );
+
+      //when
+      const result = await authService.validateUser('abcd@gmail.com', '1234');
+
+      //then
+      expect(result).toEqual({
+        id: '1',
+        grade: Grade.SILVER,
+        lastconnect_date: null,
+        createDate: 20220902,
+        updateDate: 20220902,
+        deleteAt: null,
+        email: 'abcd@gmail.com',
+        name: '사용자',
+        gender: '남성',
+        age: 20,
+        phone: '010-1234-5678',
+      });
+      expect(mockUserService.findOne).toHaveBeenCalledTimes(1);
+      expect(mockUserService.findOne).toHaveBeenCalledWith('abcd@gmail.com');
     });
   });
 });
