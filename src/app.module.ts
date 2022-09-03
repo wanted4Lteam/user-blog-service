@@ -7,6 +7,7 @@ import { UserModule } from './apis/user/user.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { NoticeBoardModule } from './apis/notice_board/notice_board.module';
 import { OperationBoardModule } from './apis/operation_board/operation_board.module';
+import { GeneralBoardModule } from './apis/general_board/general_board.module';
 
 @Module({
   imports: [
@@ -28,6 +29,8 @@ import { OperationBoardModule } from './apis/operation_board/operation_board.mod
     NoticeBoardModule,
 
     OperationBoardModule,
+
+    GeneralBoardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

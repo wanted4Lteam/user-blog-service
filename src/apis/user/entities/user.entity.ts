@@ -1,3 +1,4 @@
+import { General_Board } from 'src/apis/general_board/entities/general_board.entity';
 import { Notice_Board } from 'src/apis/notice_board/entities/notice_board.entity';
 import { Operation_Board } from 'src/apis/operation_board/entities/operation_board.entity';
 import {
@@ -7,7 +8,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 
 export enum Grade {
@@ -59,4 +60,7 @@ export class User {
 
   @OneToMany(() => Operation_Board, (operationBoard) => operationBoard.user)
   operationBoard: Operation_Board[];
+
+  @OneToMany(() => General_Board, (generalBoard) => generalBoard.user)
+  generalBoard: General_Board[];
 }
