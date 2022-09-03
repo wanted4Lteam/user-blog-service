@@ -51,4 +51,28 @@ export class GeneralBoardService {
       throw NotFoundException;
     }
   }
+
+  async getAllGeneral() {
+    try {
+      const generalList = await this.generalBoardRepository.find();
+
+      if (generalList.length === 0) {
+        throw new NotFoundException(
+          Object.assign({
+            statusCode: 404,
+            message: '자유게시판 목록이 없습니다.',
+          }),
+        );
+      }
+
+      return Object.assign({
+        data: generalList,
+        statusCode: 200,
+        message: '자유게시판 전체 목록 조회가 완료되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
+
 }
