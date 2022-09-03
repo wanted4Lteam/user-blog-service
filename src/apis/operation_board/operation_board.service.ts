@@ -31,7 +31,7 @@ export class OperationBoardService {
     }
   }
 
-  async saveNotice(operationInputDto: OperationInputDto, user_id: string) {
+  async saveOperation(operationInputDto: OperationInputDto, user_id: string) {
     try {
       const { title, content } = operationInputDto;
 
@@ -46,6 +46,29 @@ export class OperationBoardService {
         data: operation,
         statusCode: 201,
         message: '운영게시판에 등록되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
+
+  async getAllOperation() {
+    try {
+      const OperationList = await this.operationRepository.find();
+
+      if (OperationList.length === 0) {
+        throw new NotFoundException(
+          Object.assign({
+            statusCode: 404,
+            message: '운영게시판 목록이 없습니다.',
+          }),
+        );
+      }
+
+      return Object.assign({
+        data: OperationList,
+        statusCode: 200,
+        message: '운영게시판 전체 목록 조회가 완료되었습니다.',
       });
     } catch (NotFoundException) {
       throw NotFoundException;

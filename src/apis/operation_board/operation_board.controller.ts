@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Rules } from '../auth/roles.decorator';
@@ -23,6 +23,16 @@ export class OperationBoardController {
   create(@Body() operationInputDto: OperationInputDto, @Req() req) {
     const user_id = req.user.userId;
     
-    return this.operationBoardService.saveNotice(operationInputDto, user_id);
+    return this.operationBoardService.saveOperation(operationInputDto, user_id);
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: '운영게시판 전체조회 API',
+    description: '운영게시판 전체 게시글을 조회합니다.',
+  })
+  @Rules('admin', 'gold')
+  getAll() {
+    return this.operationBoardService.getAllOperation();
   }
 }
