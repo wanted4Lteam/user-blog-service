@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Notice_Board {
+export class Operation_Board {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -33,7 +33,7 @@ export class Notice_Board {
   @DeleteDateColumn()
   deleteAt: Date;
 
-  @ManyToOne(() => User, (user) => user.noticeBoard)
+  @ManyToOne(() => User, (user) => user.operationBoard)
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 }

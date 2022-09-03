@@ -1,17 +1,17 @@
 import { User } from 'src/apis/user/entities/user.entity';
 import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+    ManyToOne,
+    JoinColumn,
+  } from 'typeorm';
 
 @Entity()
-export class Notice_Board {
+export class General_Board {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -33,7 +33,7 @@ export class Notice_Board {
   @DeleteDateColumn()
   deleteAt: Date;
 
-  @ManyToOne(() => User, (user) => user.noticeBoard)
+  @ManyToOne(() => User, (user) => user.generalBoard)
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 }
