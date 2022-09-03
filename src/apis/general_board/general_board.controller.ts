@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Rules } from '../auth/roles.decorator';
@@ -33,5 +33,20 @@ export class GeneralBoardController {
   @Rules('admin', 'gold', 'silver')
   getAll() {
     return this.generalBoardService.getAllGeneral();
+  }
+
+  @Put(':id')
+  @ApiOperation({
+    summary: '자유게시판 Update API',
+    description: '자유게시판에 게시글을 수정합니다.',
+  })
+  @Rules('admin', 'gold', 'silver')
+  update(
+    @Param('id') id: string,
+    @Body() generalInputDto: GeneralInputDto,
+    @Req() req,
+  ) {
+    const user_id = req.user.userId;
+    return this.generalBoardService.updateGeneral(id, generalInputDto, user_id);
   }
 }

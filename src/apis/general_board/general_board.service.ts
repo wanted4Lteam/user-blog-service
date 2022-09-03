@@ -75,4 +75,32 @@ export class GeneralBoardService {
     }
   }
 
+  async updateGeneral(
+    id: string,
+    generalInputDto: GeneralInputDto,
+    user_id: string,
+  ) {
+    try {
+      const general = await this.findGeneralById(id);
+
+      if (general.user_id !== user_id) {
+        return Object.assign({
+          statusCode: 401,
+          message: '수정 권한이 없습니다.',
+        });
+      }
+
+      await this.generalBoardRepository.update(id, generalInputDto);
+
+      const result = await this.findGeneralById(id);
+
+      return Object.assign({
+        data: result,
+        statusCode: 200,
+        message: '게시글이 수정되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
 }
