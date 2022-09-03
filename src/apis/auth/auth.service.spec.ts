@@ -116,5 +116,32 @@ describe('AuthService', () => {
       expect(mockUserService.findOne).toHaveBeenCalledTimes(1);
       expect(mockUserService.findOne).toHaveBeenCalledWith('qwer@gmail.com');
     });
+    it('비밀번호 불일치', async () => {
+      //given
+      mockUserService.findOne.mockImplementation((email) =>
+        Promise.resolve({
+          id: '1',
+          grade: Grade.SILVER,
+          lastconnect_date: null,
+          createDate: 20220902,
+          updateDate: 20220902,
+          deleteAt: null,
+          email: 'qwer@gmail.com',
+          name: '사용자',
+          gender: '남성',
+          age: 20,
+          password: 'zxcv',
+          phone: '010-1234-5678',
+        }),
+      );
+
+      //when
+      const result = await authService.validateUser('qwer@gmail.com', '1234');
+
+      //then
+      expect(result).toEqual(null);
+      expect(mockUserService.findOne).toHaveBeenCalledTimes(1);
+      expect(mockUserService.findOne).toHaveBeenCalledWith('qwer@gmail.com');
+    });
   });
 });
