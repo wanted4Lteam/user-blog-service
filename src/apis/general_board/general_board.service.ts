@@ -125,4 +125,27 @@ export class GeneralBoardService {
       throw NotFoundException;
     }
   }
+
+  async detailGeneral(id: string) {
+    try {
+      const general = await this.findGeneralById(id);
+
+      if (!general) {
+        throw new NotFoundException(
+          Object.assign({
+            statusCode: 404,
+            message: 'Not Found general_Board ID',
+          }),
+        );
+      }
+
+      return Object.assign({
+        data: general,
+        statusCode: 200,
+        message: '자유게시판 게시글 조회가 완료되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
 }

@@ -60,4 +60,14 @@ export class GeneralBoardController {
     const user_id = req.user.userId;
     return this.generalBoardService.deleteGeneral(id, user_id);
   }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: '자유게시판 Detail API',
+    description: '자유게시판 게시글을 조회합니다.',
+  })
+  @Rules('admin', 'gold', 'silver')
+  detail(@Param('id') id: string) {
+    return this.generalBoardService.detailGeneral(id);
+  }
 }
