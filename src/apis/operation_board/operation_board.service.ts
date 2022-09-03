@@ -97,7 +97,29 @@ export class OperationBoardService {
       return Object.assign({
         data: result,
         statusCode: 200,
-        message: '운영게시판이 수정되었습니다.',
+        message: '게시글이 수정되었습니다.',
+      });
+    } catch (NotFoundException) {
+      throw NotFoundException;
+    }
+  }
+
+  async deleteOperation(id: string, user_id: string) {
+    try {
+      const operation = await this.findOperationById(id);
+
+      if (operation.user_id !== user_id) {
+        return Object.assign({
+          statusCode: 401,
+          message: '삭제 권한이 없습니다.',
+        });
+      }
+
+      await this.operationRepository.softDelete(id);
+
+      return Object.assign({
+        statusCode: 200,
+        message: '게시글이 삭제되었습니다.',
       });
     } catch (NotFoundException) {
       throw NotFoundException;

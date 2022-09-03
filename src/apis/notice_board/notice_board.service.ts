@@ -75,15 +75,19 @@ export class NoticeBoardService {
     }
   }
 
-  async updateNotice(id: string, noticeInputDto: NoticeInputDto, user_id: string) {
+  async updateNotice(
+    id: string,
+    noticeInputDto: NoticeInputDto,
+    user_id: string,
+  ) {
     try {
       const notice = await this.findNoticeById(id);
 
-      if(notice.user_id !== user_id) {
+      if (notice.user_id !== user_id) {
         return Object.assign({
           statusCode: 401,
-          message: '수정 권한이 없습니다.'
-        })
+          message: '수정 권한이 없습니다.',
+        });
       }
 
       await this.noticeBoardRepository.update(id, noticeInputDto);
@@ -93,7 +97,7 @@ export class NoticeBoardService {
       return Object.assign({
         data: result,
         statusCode: 200,
-        message: '공지사항이 수정되었습니다.',
+        message: '게시글이 수정되었습니다.',
       });
     } catch (NotFoundException) {
       throw NotFoundException;
@@ -104,18 +108,18 @@ export class NoticeBoardService {
     try {
       const notice = await this.findNoticeById(id);
 
-      if(notice.user_id !== user_id) {
+      if (notice.user_id !== user_id) {
         return Object.assign({
           statusCode: 401,
-          message: '삭제 권한이 없습니다.'
-        })
+          message: '삭제 권한이 없습니다.',
+        });
       }
 
       await this.noticeBoardRepository.softDelete(id);
 
       return Object.assign({
         statusCode: 200,
-        message: '공지사항이 삭제되었습니다.',
+        message: '게시글이 삭제되었습니다.',
       });
     } catch (NotFoundException) {
       throw NotFoundException;

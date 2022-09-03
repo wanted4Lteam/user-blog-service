@@ -51,7 +51,11 @@ export class NoticeBoardController {
     description: '공지사항을 수정합니다.',
   })
   @Rules('admin', 'gold')
-  update(@Param('id') id: string, @Body() noticeInputDto: NoticeInputDto, @Req() req) {
+  update(
+    @Param('id') id: string,
+    @Body() noticeInputDto: NoticeInputDto,
+    @Req() req,
+  ) {
     const user_id = req.user.userId;
     return this.noticeBoardService.updateNotice(id, noticeInputDto, user_id);
   }
