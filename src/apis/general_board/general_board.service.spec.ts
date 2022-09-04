@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { GeneralInputDto } from './dto/general_board.input';
@@ -25,6 +26,9 @@ describe('GeneralBoardService', () => {
     }).compile();
 
     generalBoardService = module.get<GeneralBoardService>(GeneralBoardService);
+    mockGeneralBoardRepository.create.mockClear();
+    mockGeneralBoardRepository.find.mockClear();
+    mockGeneralBoardRepository.save.mockClear();
   });
 
   it('should be defined', () => {
@@ -110,6 +114,23 @@ describe('GeneralBoardService', () => {
       expect(result.statusCode).toEqual(200);
       expect(result.message).toEqual(
         '자유게시판 전체 목록 조회가 완료되었습니다.',
+      );
+      expect(mockGeneralBoardRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardRepository.find).toHaveBeenCalledWith();
+    });
+    it('게시판 전체 조회 실패', async () => {
+      //given
+      mockGeneralBoardRepository.find.mockImplementation(() => []);
+
+      //when
+      const result = generalBoardService.getAllGeneral();
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: '자유게시판 목록이 없습니다.',
+        }),
       );
       expect(mockGeneralBoardRepository.find).toHaveBeenCalledTimes(1);
       expect(mockGeneralBoardRepository.find).toHaveBeenCalledWith();
