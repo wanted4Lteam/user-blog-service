@@ -10,6 +10,7 @@ describe('GeneralBoardService', () => {
   const mockGeneralBoardRepository = {
     create: jest.fn(),
     save: jest.fn(),
+    find: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -69,6 +70,49 @@ describe('GeneralBoardService', () => {
         user_id,
       });
       expect(mockGeneralBoardRepository.save).toHaveBeenCalledWith(createBoard);
+    });
+  });
+
+  describe('getAllGeneral', () => {
+    it('게시판 전체 조회 성공', async () => {
+      //given
+      const findBoards: General_Board[] = [
+        {
+          title: '제목1',
+          content: '내용1',
+          user_id: '1',
+          id: '',
+          createdAt: undefined,
+          updateAt: undefined,
+          deleteAt: undefined,
+          user: null,
+        },
+        {
+          title: '제목2',
+          content: '내용2',
+          user_id: '2',
+          id: '',
+          createdAt: undefined,
+          updateAt: undefined,
+          deleteAt: undefined,
+          user: null,
+        },
+      ];
+      mockGeneralBoardRepository.find.mockImplementation(() =>
+        Promise.resolve(findBoards),
+      );
+
+      //when
+      const result = await generalBoardService.getAllGeneral();
+
+      //then
+      expect(result.data).toEqual(findBoards);
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual(
+        '자유게시판 전체 목록 조회가 완료되었습니다.',
+      );
+      expect(mockGeneralBoardRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardRepository.find).toHaveBeenCalledWith();
     });
   });
 });
