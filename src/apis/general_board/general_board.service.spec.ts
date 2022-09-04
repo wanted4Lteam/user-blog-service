@@ -169,5 +169,26 @@ describe('GeneralBoardService', () => {
         where: { id: board_id },
       });
     });
+    it('게시글 조회 실패', async () => {
+      //given
+      mockGeneralBoardRepository.findOne.mockImplementation(() => null);
+
+      //when
+      const board_id = '';
+
+      const result = generalBoardService.findGeneralById(board_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found General_Board ID',
+        }),
+      );
+      expect(mockGeneralBoardRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardRepository.findOne).toHaveBeenCalledWith({
+        where: { id: board_id },
+      });
+    });
   });
 });
