@@ -224,5 +224,26 @@ describe('GeneralBoardService', () => {
       expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
       expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
     });
+    it('단일 게시글 조회 실패', async () => {
+      //given
+      const mockGeneralBoardService = jest
+        .spyOn(generalBoardService, 'findGeneralById')
+        .mockResolvedValue(null);
+
+      //when
+      const board_id = '';
+
+      const result = generalBoardService.detailGeneral(board_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found general_Board ID',
+        }),
+      );
+      expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+    });
   });
 });
