@@ -12,6 +12,7 @@ describe('GeneralBoardService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
+    findOne: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -29,6 +30,7 @@ describe('GeneralBoardService', () => {
     mockGeneralBoardRepository.create.mockClear();
     mockGeneralBoardRepository.find.mockClear();
     mockGeneralBoardRepository.save.mockClear();
+    mockGeneralBoardRepository.findOne.mockClear();
   });
 
   it('should be defined', () => {
@@ -134,6 +136,38 @@ describe('GeneralBoardService', () => {
       );
       expect(mockGeneralBoardRepository.find).toHaveBeenCalledTimes(1);
       expect(mockGeneralBoardRepository.find).toHaveBeenCalledWith();
+    });
+  });
+
+  describe('findGeneralById', () => {
+    it('게시글 조회 성공', async () => {
+      //given
+      const findBoard: General_Board = {
+        id: '1',
+        user_id: '사용자',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      mockGeneralBoardRepository.findOne.mockImplementation(
+        (board_id) => findBoard,
+      );
+
+      //when
+      const board_id = '1';
+
+      const result = await generalBoardService.findGeneralById(board_id);
+
+      //then
+      expect(result).toEqual(findBoard);
+      expect(mockGeneralBoardRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardRepository.findOne).toHaveBeenCalledWith({
+        where: { id: board_id },
+      });
     });
   });
 });
