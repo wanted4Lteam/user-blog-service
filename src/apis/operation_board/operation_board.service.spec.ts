@@ -436,5 +436,45 @@ describe('OperationBoardService', () => {
       expect(mockOperationBoardService).toHaveBeenCalledWith(board_id);
       expect(mockOperationBoardRepository.softDelete).toHaveBeenCalledTimes(1);
     });
+    it('게시글 삭제 권한 없음', async () => {
+      //given
+      const findBoard: Operation_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockOperationBoardService = jest
+        .spyOn(operationBoardService, 'findOperationById')
+        .mockResolvedValueOnce(findBoard);
+
+      mockOperationBoardRepository.softDelete.mockImplementation((board_id) => {
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 0,
+        });
+      });
+
+      //when
+      const board_id = '1';
+      const user_id = 'another user';
+
+      const result = await operationBoardService.deleteOperation(
+        board_id,
+        user_id,
+      );
+
+      //then
+      expect(result.statusCode).toEqual(401);
+      expect(result.message).toEqual('삭제 권한이 없습니다.');
+      expect(mockOperationBoardService).toHaveBeenCalledTimes(1);
+      expect(mockOperationBoardRepository.softDelete).toHaveBeenCalledTimes(0);
+    });
   });
 });
