@@ -222,5 +222,26 @@ describe('NoticeBoardService', () => {
       expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
       expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
     });
+    it('단일 게시글 조회 실패', async () => {
+      //given
+      const mockNoticeBoardService = jest
+        .spyOn(noticeBoardService, 'findNoticeById')
+        .mockResolvedValue(null);
+
+      //when
+      const board_id = '';
+
+      const result = noticeBoardService.detailNotice(board_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found Notice_Board ID',
+        }),
+      );
+      expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
+    });
   });
 });
