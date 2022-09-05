@@ -12,6 +12,7 @@ describe('OperationBoardService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
+    findOne: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -31,6 +32,7 @@ describe('OperationBoardService', () => {
     mockOperationBoardRepository.create.mockClear();
     mockOperationBoardRepository.create.mockClear();
     mockOperationBoardRepository.find.mockClear();
+    mockOperationBoardRepository.findOne.mockClear();
   });
 
   it('should be defined', () => {
@@ -140,6 +142,38 @@ describe('OperationBoardService', () => {
       );
       expect(mockOperationBoardRepository.find).toHaveBeenCalledTimes(1);
       expect(mockOperationBoardRepository.find).toHaveBeenCalledWith();
+    });
+  });
+
+  describe('findOperationById', () => {
+    it('게시글 조회 성공', async () => {
+      //given
+      const findBoard: Operation_Board = {
+        id: '1',
+        user_id: '사용자',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      mockOperationBoardRepository.findOne.mockImplementation(
+        (board_id) => findBoard,
+      );
+
+      //when
+      const board_id = '1';
+
+      const result = await operationBoardService.findOperationById(board_id);
+
+      //then
+      expect(result).toEqual(findBoard);
+      expect(mockOperationBoardRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockOperationBoardRepository.findOne).toHaveBeenCalledWith({
+        where: { id: board_id },
+      });
     });
   });
 });
