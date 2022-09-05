@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { OperationInputDto } from './dto/operation_board.input';
@@ -119,6 +120,23 @@ describe('OperationBoardService', () => {
       expect(result.statusCode).toEqual(200);
       expect(result.message).toEqual(
         '운영게시판 전체 목록 조회가 완료되었습니다.',
+      );
+      expect(mockOperationBoardRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockOperationBoardRepository.find).toHaveBeenCalledWith();
+    });
+    it('게시판 전체 조회 실패', async () => {
+      //given
+      mockOperationBoardRepository.find.mockImplementation(() => []);
+
+      //when
+      const result = operationBoardService.getAllOperation();
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: '운영게시판 목록이 없습니다.',
+        }),
       );
       expect(mockOperationBoardRepository.find).toHaveBeenCalledTimes(1);
       expect(mockOperationBoardRepository.find).toHaveBeenCalledWith();
