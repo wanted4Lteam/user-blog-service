@@ -10,6 +10,7 @@ describe('NoticeBoardService', () => {
   const mockNoticeBoardRepository = {
     create: jest.fn(),
     save: jest.fn(),
+    find: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -26,6 +27,7 @@ describe('NoticeBoardService', () => {
     noticeBoardService = module.get<NoticeBoardService>(NoticeBoardService);
     mockNoticeBoardRepository.create.mockClear();
     mockNoticeBoardRepository.save.mockClear();
+    mockNoticeBoardRepository.find.mockClear();
   });
 
   describe('saveNotice', () => {
@@ -69,6 +71,49 @@ describe('NoticeBoardService', () => {
         user_id,
       });
       expect(mockNoticeBoardRepository.save).toHaveBeenCalledWith(createBoard);
+    });
+  });
+
+  describe('getAllNotice', () => {
+    it('공시사항 전체 조회 성공', async () => {
+      //given
+      const findBoards: Notice_Board[] = [
+        {
+          title: '제목1',
+          content: '내용1',
+          user_id: '1',
+          id: '',
+          createdAt: undefined,
+          updateAt: undefined,
+          deleteAt: undefined,
+          user: null,
+        },
+        {
+          title: '제목2',
+          content: '내용2',
+          user_id: '2',
+          id: '',
+          createdAt: undefined,
+          updateAt: undefined,
+          deleteAt: undefined,
+          user: null,
+        },
+      ];
+      mockNoticeBoardRepository.find.mockImplementation(() =>
+        Promise.resolve(findBoards),
+      );
+
+      //when
+      const result = await noticeBoardService.getAllNotice();
+
+      //then
+      expect(result.data).toEqual(findBoards);
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual(
+        '공지사항 전체 목록 조회가 완료되었습니다.',
+      );
+      expect(mockNoticeBoardRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardRepository.find).toHaveBeenCalledWith();
     });
   });
 });
