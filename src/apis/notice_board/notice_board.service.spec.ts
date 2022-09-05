@@ -12,6 +12,7 @@ describe('NoticeBoardService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
+    findOne: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -29,6 +30,7 @@ describe('NoticeBoardService', () => {
     mockNoticeBoardRepository.create.mockClear();
     mockNoticeBoardRepository.save.mockClear();
     mockNoticeBoardRepository.find.mockClear();
+    mockNoticeBoardRepository.findOne.mockClear();
   });
 
   describe('saveNotice', () => {
@@ -132,6 +134,38 @@ describe('NoticeBoardService', () => {
       );
       expect(mockNoticeBoardRepository.find).toHaveBeenCalledTimes(1);
       expect(mockNoticeBoardRepository.find).toHaveBeenCalledWith();
+    });
+  });
+
+  describe('findNoticeById', () => {
+    it('공지사항 조회 성공', async () => {
+      //given
+      const findBoard: Notice_Board = {
+        id: '1',
+        user_id: '사용자',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      mockNoticeBoardRepository.findOne.mockImplementation(
+        (board_id) => findBoard,
+      );
+
+      //when
+      const board_id = '1';
+
+      const result = await noticeBoardService.findNoticeById(board_id);
+
+      //then
+      expect(result).toEqual(findBoard);
+      expect(mockNoticeBoardRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardRepository.findOne).toHaveBeenCalledWith({
+        where: { id: board_id },
+      });
     });
   });
 });
