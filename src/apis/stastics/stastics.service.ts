@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 
 @Injectable()
@@ -19,9 +19,9 @@ export class StasticsService {
   }
 
   async findByAge(age: number) {
-    return await this.userrepository.findBy(
-      { age: LessThan(age + 10) } && { age: MoreThan(age) },
-    );
+    return await this.userrepository.findBy({
+      age: Between(age, age - 0 + 9),
+    });
   }
 
   async findByConnected() {}
