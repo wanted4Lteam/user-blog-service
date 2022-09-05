@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NoticeInputDto } from './dto/notice_board.input';
@@ -111,6 +112,23 @@ describe('NoticeBoardService', () => {
       expect(result.statusCode).toEqual(200);
       expect(result.message).toEqual(
         '공지사항 전체 목록 조회가 완료되었습니다.',
+      );
+      expect(mockNoticeBoardRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardRepository.find).toHaveBeenCalledWith();
+    });
+    it('공지사항 전체 조회 실패', async () => {
+      //given
+      mockNoticeBoardRepository.find.mockImplementation(() => []);
+
+      //when
+      const result = noticeBoardService.getAllNotice();
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: '공지사항 목록이 없습니다.',
+        }),
       );
       expect(mockNoticeBoardRepository.find).toHaveBeenCalledTimes(1);
       expect(mockNoticeBoardRepository.find).toHaveBeenCalledWith();
