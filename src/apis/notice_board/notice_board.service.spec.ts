@@ -345,5 +345,38 @@ describe('NoticeBoardService', () => {
       expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
       expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
     });
+    it('존재하지 않는 공지사항 수정', async () => {
+      //given
+      const findBoard: Notice_Board = null;
+
+      const mockNoticeBoardService = jest
+        .spyOn(noticeBoardService, 'findNoticeById')
+        .mockRejectedValue(
+          new NotFoundException({
+            statusCode: 404,
+            message: 'Not Found Notice_Board ID',
+          }),
+        );
+
+      //when
+      const board_id = '';
+      const user_id = 'user';
+      const input: NoticeInputDto = {
+        title: '제목 수정',
+        content: '내용 수정',
+      };
+
+      const result = noticeBoardService.updateNotice(board_id, input, user_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found Notice_Board ID',
+        }),
+      );
+      expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
+    });
   });
 });
