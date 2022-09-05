@@ -189,4 +189,38 @@ describe('NoticeBoardService', () => {
       });
     });
   });
+
+  describe('detailNotice', () => {
+    it('단일 공지사항 조회 성공', async () => {
+      //given
+      const findBoard: Notice_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockNoticeBoardService = jest
+        .spyOn(noticeBoardService, 'findNoticeById')
+        .mockResolvedValue(findBoard);
+
+      //when
+      const board_id = '1';
+
+      const result = await noticeBoardService.detailNotice(board_id);
+
+      //then
+      expect(result.data).toEqual(findBoard);
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual(
+        '공지사항이 게시글 조회가 완료되었습니다.',
+      );
+      expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
+    });
+  });
 });
