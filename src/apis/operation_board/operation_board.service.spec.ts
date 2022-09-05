@@ -13,6 +13,7 @@ describe('OperationBoardService', () => {
     save: jest.fn(),
     find: jest.fn(),
     findOne: jest.fn(),
+    update: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -33,6 +34,7 @@ describe('OperationBoardService', () => {
     mockOperationBoardRepository.create.mockClear();
     mockOperationBoardRepository.find.mockClear();
     mockOperationBoardRepository.findOne.mockClear();
+    mockOperationBoardRepository.update.mockClear();
   });
 
   it('should be defined', () => {
@@ -250,6 +252,63 @@ describe('OperationBoardService', () => {
       );
       expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
       expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+    });
+  });
+
+  describe('updateOperation', () => {
+    it('게시글 수정 성공', async () => {
+      //given
+      const findBoard: Operation_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const updateBoard: Operation_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목 수정',
+        content: '내용 수정',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockOperationBoardService = jest
+        .spyOn(operationBoardService, 'findOperationById')
+        .mockResolvedValueOnce(findBoard)
+        .mockResolvedValueOnce(updateBoard);
+
+      mockOperationBoardRepository.update.mockImplementation((id, input) =>
+        Promise.resolve(updateBoard),
+      );
+
+      //when
+      const board_id = '1';
+      const user_id = 'user';
+      const input: OperationInputDto = {
+        title: '제목 수정',
+        content: '내용 수정',
+      };
+
+      const result = await operationBoardService.updateOperation(
+        board_id,
+        input,
+        user_id,
+      );
+
+      //then
+      expect(result.data).toEqual(updateBoard);
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual('게시글이 수정되었습니다.');
+      expect(mockOperationBoardService).toHaveBeenCalledTimes(2);
+      expect(mockOperationBoardService).toHaveBeenCalledWith(board_id);
     });
   });
 });
