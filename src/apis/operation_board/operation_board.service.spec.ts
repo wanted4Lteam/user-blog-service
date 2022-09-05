@@ -476,5 +476,42 @@ describe('OperationBoardService', () => {
       expect(mockOperationBoardService).toHaveBeenCalledTimes(1);
       expect(mockOperationBoardRepository.softDelete).toHaveBeenCalledTimes(0);
     });
+    it('존재하지 않는 게시글 삭제', async () => {
+      //given
+      const findBoard: Operation_Board = null;
+
+      const mockOperationBoardService = jest
+        .spyOn(operationBoardService, 'findOperationById')
+        .mockRejectedValue(
+          new NotFoundException({
+            statusCode: 404,
+            message: 'Not Found Operation_Board ID',
+          }),
+        );
+
+      mockOperationBoardRepository.softDelete.mockImplementation((board_id) => {
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 0,
+        });
+      });
+
+      //when
+      const board_id = '';
+      const user_id = 'user';
+
+      const result = operationBoardService.deleteOperation(board_id, user_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found Operation_Board ID',
+        }),
+      );
+      expect(mockOperationBoardService).toHaveBeenCalledTimes(1);
+      expect(mockOperationBoardRepository.softDelete).toHaveBeenCalledTimes(0);
+    });
   });
 });
