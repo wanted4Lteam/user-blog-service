@@ -304,5 +304,48 @@ describe('GeneralBoardService', () => {
       expect(mockGeneralBoardService).toHaveBeenCalledTimes(2);
       expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
     });
+    it('게시글 수정 권한 없음', async () => {
+      //given
+      const findBoard: General_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockGeneralBoardService = jest
+        .spyOn(generalBoardService, 'findGeneralById')
+        .mockResolvedValueOnce(findBoard);
+
+      mockGeneralBoardRepository.update.mockImplementation((id, input) =>
+        Promise.resolve(findBoard),
+      );
+
+      //when
+      const board_id = '1';
+      const user_id = 'another user';
+      const input: GeneralInputDto = {
+        title: '제목 수정',
+        content: '내용 수정',
+      };
+
+      const result = await generalBoardService.updateGeneral(
+        board_id,
+        input,
+        user_id,
+      );
+
+      //then
+      expect(result).toEqual({
+        statusCode: 401,
+        message: '수정 권한이 없습니다.',
+      });
+      expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+    });
   });
 });
