@@ -14,6 +14,7 @@ describe('GeneralBoardService', () => {
     find: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
+    softDelete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -33,6 +34,7 @@ describe('GeneralBoardService', () => {
     mockGeneralBoardRepository.save.mockClear();
     mockGeneralBoardRepository.findOne.mockClear();
     mockGeneralBoardRepository.update.mockClear();
+    mockGeneralBoardRepository.softDelete.mockClear();
   });
 
   it('should be defined', () => {
@@ -383,6 +385,47 @@ describe('GeneralBoardService', () => {
       );
       expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
       expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+    });
+  });
+
+  describe('deleteGeneral', () => {
+    it('게시글 삭제 성공', async () => {
+      //given
+      const findBoard: General_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockGeneralBoardService = jest
+        .spyOn(generalBoardService, 'findGeneralById')
+        .mockResolvedValueOnce(findBoard);
+
+      mockGeneralBoardRepository.softDelete.mockImplementation((board_id) => {
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 1,
+        });
+      });
+
+      //when
+      const board_id = '';
+      const user_id = 'user';
+
+      const result = await generalBoardService.deleteGeneral(board_id, user_id);
+
+      //then
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual('게시글이 삭제되었습니다.');
+      expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+      expect(mockGeneralBoardRepository.softDelete).toHaveBeenCalledTimes(1);
     });
   });
 });
