@@ -302,5 +302,48 @@ describe('NoticeBoardService', () => {
       expect(mockNoticeBoardService).toHaveBeenCalledTimes(2);
       expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
     });
+    it('공지사항 수정 권한 없음', async () => {
+      //given
+      const findBoard: Notice_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockNoticeBoardService = jest
+        .spyOn(noticeBoardService, 'findNoticeById')
+        .mockResolvedValueOnce(findBoard);
+
+      mockNoticeBoardRepository.update.mockImplementation((id, input) =>
+        Promise.resolve(findBoard),
+      );
+
+      //when
+      const board_id = '1';
+      const user_id = 'another user';
+      const input: NoticeInputDto = {
+        title: '제목 수정',
+        content: '내용 수정',
+      };
+
+      const result = await noticeBoardService.updateNotice(
+        board_id,
+        input,
+        user_id,
+      );
+
+      //then
+      expect(result).toEqual({
+        statusCode: 401,
+        message: '수정 권한이 없습니다.',
+      });
+      expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
+    });
   });
 });
