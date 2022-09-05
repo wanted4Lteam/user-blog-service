@@ -13,6 +13,7 @@ describe('GeneralBoardService', () => {
     save: jest.fn(),
     find: jest.fn(),
     findOne: jest.fn(),
+    update: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -31,6 +32,7 @@ describe('GeneralBoardService', () => {
     mockGeneralBoardRepository.find.mockClear();
     mockGeneralBoardRepository.save.mockClear();
     mockGeneralBoardRepository.findOne.mockClear();
+    mockGeneralBoardRepository.update.mockClear();
   });
 
   it('should be defined', () => {
@@ -243,6 +245,63 @@ describe('GeneralBoardService', () => {
         }),
       );
       expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+    });
+  });
+
+  describe('updateGeneral', () => {
+    it('게시글 수정 성공', async () => {
+      //given
+      const findBoard: General_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const updateBoard: General_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목 수정',
+        content: '내용 수정',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockGeneralBoardService = jest
+        .spyOn(generalBoardService, 'findGeneralById')
+        .mockResolvedValueOnce(findBoard)
+        .mockResolvedValueOnce(updateBoard);
+
+      mockGeneralBoardRepository.update.mockImplementation((id, input) =>
+        Promise.resolve(updateBoard),
+      );
+
+      //when
+      const board_id = '1';
+      const user_id = 'user';
+      const input: GeneralInputDto = {
+        title: '제목 수정',
+        content: '내용 수정',
+      };
+
+      const result = await generalBoardService.updateGeneral(
+        board_id,
+        input,
+        user_id,
+      );
+
+      //then
+      expect(result.data).toEqual(updateBoard);
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual('게시글이 수정되었습니다.');
+      expect(mockGeneralBoardService).toHaveBeenCalledTimes(2);
       expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
     });
   });
