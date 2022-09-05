@@ -353,5 +353,42 @@ describe('OperationBoardService', () => {
       expect(mockOperationBoardService).toHaveBeenCalledTimes(1);
       expect(mockOperationBoardService).toHaveBeenCalledWith(board_id);
     });
+    it('존재하지 않는 게시글 수정', async () => {
+      //given
+      const findBoard: Operation_Board = null;
+
+      const mockOperationBoardService = jest
+        .spyOn(operationBoardService, 'findOperationById')
+        .mockRejectedValue(
+          new NotFoundException({
+            statusCode: 404,
+            message: 'Not Found Operation_Board ID',
+          }),
+        );
+
+      //when
+      const board_id = '';
+      const user_id = 'user';
+      const input: OperationInputDto = {
+        title: '제목 수정',
+        content: '내용 수정',
+      };
+
+      const result = operationBoardService.updateOperation(
+        board_id,
+        input,
+        user_id,
+      );
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found Operation_Board ID',
+        }),
+      );
+      expect(mockOperationBoardService).toHaveBeenCalledTimes(1);
+      expect(mockOperationBoardService).toHaveBeenCalledWith(board_id);
+    });
   });
 });
