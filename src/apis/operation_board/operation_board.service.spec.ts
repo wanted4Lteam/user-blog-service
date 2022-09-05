@@ -214,7 +214,7 @@ describe('OperationBoardService', () => {
         user: null,
       };
 
-      const mockGeneralBoardService = jest
+      const mockOperationBoardService = jest
         .spyOn(operationBoardService, 'findOperationById')
         .mockResolvedValue(findBoard);
 
@@ -229,8 +229,8 @@ describe('OperationBoardService', () => {
       expect(result.message).toEqual(
         '운영게시판 게시글 조회가 완료되었습니다.',
       );
-      expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
-      expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+      expect(mockOperationBoardService).toHaveBeenCalledTimes(1);
+      expect(mockOperationBoardService).toHaveBeenCalledWith(board_id);
     });
     it('단일 게시글 조회 실패', async () => {
       //given
