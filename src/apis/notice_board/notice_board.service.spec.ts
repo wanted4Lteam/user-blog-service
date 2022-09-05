@@ -167,5 +167,26 @@ describe('NoticeBoardService', () => {
         where: { id: board_id },
       });
     });
+    it('공지사항 조회 실패', async () => {
+      //given
+      mockNoticeBoardRepository.findOne.mockImplementation(() => null);
+
+      //when
+      const board_id = '';
+
+      const result = noticeBoardService.findNoticeById(board_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found Notice_Board ID',
+        }),
+      );
+      expect(mockNoticeBoardRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardRepository.findOne).toHaveBeenCalledWith({
+        where: { id: board_id },
+      });
+    });
   });
 });
