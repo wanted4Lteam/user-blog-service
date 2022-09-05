@@ -14,6 +14,7 @@ describe('NoticeBoardService', () => {
     find: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
+    softDelete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -33,6 +34,7 @@ describe('NoticeBoardService', () => {
     mockNoticeBoardRepository.find.mockClear();
     mockNoticeBoardRepository.findOne.mockClear();
     mockNoticeBoardRepository.update.mockClear();
+    mockNoticeBoardRepository.softDelete.mockClear();
   });
 
   describe('saveNotice', () => {
@@ -377,6 +379,47 @@ describe('NoticeBoardService', () => {
       );
       expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
       expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
+    });
+  });
+
+  describe('deleteNotice', () => {
+    it('공지사항 삭제 성공', async () => {
+      //given
+      const findBoard: Notice_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockNoticeBoardService = jest
+        .spyOn(noticeBoardService, 'findNoticeById')
+        .mockResolvedValueOnce(findBoard);
+
+      mockNoticeBoardRepository.softDelete.mockImplementation((board_id) => {
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 1,
+        });
+      });
+
+      //when
+      const board_id = '';
+      const user_id = 'user';
+
+      const result = await noticeBoardService.deleteNotice(board_id, user_id);
+
+      //then
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual('게시글이 삭제되었습니다.');
+      expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardService).toHaveBeenCalledWith(board_id);
+      expect(mockNoticeBoardRepository.softDelete).toHaveBeenCalledTimes(1);
     });
   });
 });
