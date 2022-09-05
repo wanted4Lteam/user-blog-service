@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, LessThan, Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 
 @Injectable()
@@ -11,18 +11,20 @@ export class StasticsService {
   ) {}
 
   async getAll() {
-    return await this.userrepository.find();
+    return await this.userrepository.findAndCount();
   }
 
   async findByGender(gender: string) {
-    return await this.userrepository.findBy({ gender: gender });
+    const result = await this.userrepository.findAndCountBy({ gender: gender });
+    return result[1];
   }
 
   async findByAge(age: number) {
-    return await this.userrepository.findBy({
+    const result = await this.userrepository.findAndCountBy({
       age: Between(age, age - 0 + 9),
     });
+    return result[1];
   }
 
-  async findByConnected() {}
+  async findByConnected(hour: number) {}
 }

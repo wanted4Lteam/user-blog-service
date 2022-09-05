@@ -21,7 +21,7 @@ export class StasticsController {
   @Get(':gender')
   @ApiOperation({
     summary: '성별에 따른 사용자 조회 API',
-    description: '남성, 또는 여성 사용자만을 조회합니다.',
+    description: '남성, 또는 여성 사용자의 수를 조회합니다.',
   })
   async findByGender(@Param('gender') gender: string) {
     return await this.stasticsService.findByGender(gender);
@@ -30,12 +30,18 @@ export class StasticsController {
   @Get('ages/:age')
   @ApiOperation({
     summary: '나이에 따른 사용자 조회 API',
-    description: '특정 나이의 사용자만을 조회합니다.',
+    description: '특정 나이의 사용자의 수를 조회합니다.',
   })
   async findByAge(@Param('age') age: number) {
     return await this.stasticsService.findByAge(age);
   }
 
-  //   @Get()
-  //   async findByConnected() {}
+  @Get('connect/:hour')
+  @ApiOperation({
+    summary: '최근 접속 시간에 따른 사용자 조회 API',
+    description: '최근 접속 사용자의 수를 조회합니다.',
+  })
+  async findByConnected(@Param('hour') hour: number) {
+    return await this.stasticsService.findByConnected(hour);
+  }
 }
