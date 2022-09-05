@@ -464,5 +464,42 @@ describe('GeneralBoardService', () => {
       expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
       expect(mockGeneralBoardRepository.softDelete).toHaveBeenCalledTimes(0);
     });
+    it('존재하지 않는 게시글 삭제', async () => {
+      //given
+      const findBoard: General_Board = null;
+
+      const mockGeneralBoardService = jest
+        .spyOn(generalBoardService, 'findGeneralById')
+        .mockRejectedValue(
+          new NotFoundException({
+            statusCode: 404,
+            message: 'Not Found General_Board ID',
+          }),
+        );
+
+      mockGeneralBoardRepository.softDelete.mockImplementation((board_id) => {
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 0,
+        });
+      });
+
+      //when
+      const board_id = '';
+      const user_id = 'user';
+
+      const result = generalBoardService.deleteGeneral(board_id, user_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found General_Board ID',
+        }),
+      );
+      expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardRepository.softDelete).toHaveBeenCalledTimes(0);
+    });
   });
 });
