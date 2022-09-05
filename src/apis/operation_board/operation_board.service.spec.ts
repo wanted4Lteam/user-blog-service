@@ -175,5 +175,26 @@ describe('OperationBoardService', () => {
         where: { id: board_id },
       });
     });
+    it('게시글 조회 실패', async () => {
+      //given
+      mockOperationBoardRepository.findOne.mockImplementation(() => null);
+
+      //when
+      const board_id = '';
+
+      const result = operationBoardService.findOperationById(board_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found Operation_Board ID',
+        }),
+      );
+      expect(mockOperationBoardRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockOperationBoardRepository.findOne).toHaveBeenCalledWith({
+        where: { id: board_id },
+      });
+    });
   });
 });
