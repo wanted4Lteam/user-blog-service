@@ -458,5 +458,42 @@ describe('NoticeBoardService', () => {
       expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
       expect(mockNoticeBoardRepository.softDelete).toHaveBeenCalledTimes(0);
     });
+    it('존재하지 않는 공지사항 삭제', async () => {
+      //given
+      const findBoard: Notice_Board = null;
+
+      const mockNoticeBoardService = jest
+        .spyOn(noticeBoardService, 'findNoticeById')
+        .mockRejectedValue(
+          new NotFoundException({
+            statusCode: 404,
+            message: 'Not Found Notice_Board ID',
+          }),
+        );
+
+      mockNoticeBoardRepository.softDelete.mockImplementation((board_id) => {
+        Promise.resolve({
+          generatedMaps: [],
+          raw: [],
+          affected: 0,
+        });
+      });
+
+      //when
+      const board_id = '';
+      const user_id = 'user';
+
+      const result = noticeBoardService.deleteNotice(board_id, user_id);
+
+      //then
+      expect(result).rejects.toThrowError(
+        new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found Notice_Board ID',
+        }),
+      );
+      expect(mockNoticeBoardService).toHaveBeenCalledTimes(1);
+      expect(mockNoticeBoardRepository.softDelete).toHaveBeenCalledTimes(0);
+    });
   });
 });
