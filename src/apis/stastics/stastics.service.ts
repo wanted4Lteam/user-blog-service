@@ -10,7 +10,13 @@ export class StasticsService {
     private readonly userrepository: Repository<User>,
   ) {}
 
-  async findByGender(gender: string) {}
+  async getAll() {
+    return await this.userrepository.find();
+  }
+
+  async findByGender(gender: string) {
+    return await this.userrepository.findBy({ gender: gender });
+  }
 
   async findByAge(age: number) {}
 
