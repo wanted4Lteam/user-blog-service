@@ -197,4 +197,38 @@ describe('OperationBoardService', () => {
       });
     });
   });
+
+  describe('detailOperation', () => {
+    it('단일 게시글 조회 성공', async () => {
+      //given
+      const findBoard: Operation_Board = {
+        id: '1',
+        user_id: 'user',
+        title: '제목',
+        content: '내용',
+        createdAt: undefined,
+        updateAt: undefined,
+        deleteAt: undefined,
+        user: null,
+      };
+
+      const mockGeneralBoardService = jest
+        .spyOn(operationBoardService, 'findOperationById')
+        .mockResolvedValue(findBoard);
+
+      //when
+      const board_id = '1';
+
+      const result = await operationBoardService.detailOperation(board_id);
+
+      //then
+      expect(result.data).toEqual(findBoard);
+      expect(result.statusCode).toEqual(200);
+      expect(result.message).toEqual(
+        '운영게시판 게시글 조회가 완료되었습니다.',
+      );
+      expect(mockGeneralBoardService).toHaveBeenCalledTimes(1);
+      expect(mockGeneralBoardService).toHaveBeenCalledWith(board_id);
+    });
+  });
 });
