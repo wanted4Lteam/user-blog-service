@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, LessThan, Repository } from 'typeorm';
+import { Between, LessThan, MoreThan, Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 
 @Injectable()
@@ -26,5 +26,29 @@ export class StasticsService {
     return result[1];
   }
 
-  async findByConnected(hour: number) {}
+  async findByConnected(hour: number) {
+    const date = new Date();
+
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    const last_date = new Date(
+      year,
+      month,
+      day,
+      hours - hour,
+      minutes,
+      seconds,
+    );
+
+    const result = await this.userrepository.findAndCountBy({
+      lastconnect_date: MoreThan(last_date),
+    });
+    return result[1];
+  }
 }
