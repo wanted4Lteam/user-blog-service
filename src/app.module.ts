@@ -8,6 +8,7 @@ import { AuthModule } from './apis/auth/auth.module';
 import { NoticeBoardModule } from './apis/notice_board/notice_board.module';
 import { OperationBoardModule } from './apis/operation_board/operation_board.module';
 import { GeneralBoardModule } from './apis/general_board/general_board.module';
+import { StasticsModule } from './apis/stastics/stastics.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { GeneralBoardModule } from './apis/general_board/general_board.module';
     OperationBoardModule,
 
     GeneralBoardModule,
+
+    StasticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
